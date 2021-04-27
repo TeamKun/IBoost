@@ -1,0 +1,6 @@
+name: IBoost
+version: @version@
+main: net.kunmc.lab.iboost.IBoost
+api-version: 1.16
+authors: [ MORIMORI0317, KUNDEVLAB ]
+description: The Ikisugi Boost Plugin

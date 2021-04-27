@@ -1,6 +1,5 @@
 package net.kunmc.lab.iboost.handler;
 
-import net.kunmc.lab.iboost.Config;
 import net.kunmc.lab.iboost.boost.BoostManager;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
@@ -21,9 +20,8 @@ public class ServerHandler implements Listener {
 
     @EventHandler
     public void onPlayerSneak(PlayerToggleSneakEvent e) {
-        //e.isSneaking()
-        if (!Config.isPressMode() && e.isSneaking()) {
-            BoostManager.getInstance().boosted(e.getPlayer().getUniqueId(), 5f);
+        if (BoostManager.getInstance().isAtive() && !BoostManager.getInstance().isPressMode() && e.isSneaking()) {
+            BoostManager.getInstance().boosted(e.getPlayer().getUniqueId(), 1f);
         }
     }
 
@@ -38,15 +36,17 @@ public class ServerHandler implements Listener {
     }
 
     public static void onTick() {
-        BoostManager manager = BoostManager.getInstance();
+        if (BoostManager.getInstance().isAtive()) {
+            BoostManager manager = BoostManager.getInstance();
 
-        Bukkit.getServer().getOnlinePlayers().forEach(n -> {
+            Bukkit.getServer().getOnlinePlayers().forEach(n -> {
 
-            if (Config.isPressMode() && n.isSneaking())
-                manager.boosted(n.getUniqueId(), 0.5f);
+                if (BoostManager.getInstance().isPressMode() && n.isSneaking())
+                    manager.boosted(n.getUniqueId(), 0.3f);
 
-            manager.tick(n.getUniqueId());
-            n.spigot().sendMessage(ChatMessageType.ACTION_BAR, manager.getActionBar(n.getUniqueId()));
-        });
+                manager.tick(n.getUniqueId());
+                n.spigot().sendMessage(ChatMessageType.ACTION_BAR, manager.getActionBar(n.getUniqueId()));
+            });
+        }
     }
 }

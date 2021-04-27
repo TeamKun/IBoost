@@ -4,3 +4,8 @@ main: net.kunmc.lab.iboost.IBoost
 api-version: 1.16
 authors: [ MORIMORI0317, KUNDEVLAB ]
 description: The Ikisugi Boost Plugin
+commands:
+  boost:
+    description: boost plugin...
+    usage: /<boost>
+    permission: op

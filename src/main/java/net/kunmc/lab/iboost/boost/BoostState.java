@@ -67,6 +67,9 @@ public class BoostState {
                 return ChatColor.GOLD;
         }
 
+        if (chaged >= 50)
+            return ChatColor.GOLD;
+
         return ChatColor.WHITE;
     }
 

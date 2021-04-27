@@ -7,12 +7,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 public final class IBoost extends JavaPlugin {
 
     @Override
     public void onEnable() {
         ServerHandler.init(getServer().getPluginManager(), this);
         IBCommands.init();
+        getLogger().log(Level.INFO, "------------------------------------------------------------------------------------------------\n" +
+                "  ####   ##  ###    ####    ## ##   ##  ###   ## ##     ####            ### ##    ## ##    ## ##    ## ##   #### ##\n" +
+                "   ##    ##  ##      ##    ##   ##  ##   ##  ##   ##     ##              ##  ##  ##   ##  ##   ##  ##   ##  # ## ##\n" +
+                "   ##    ## ##       ##    ####     ##   ##  ##          ##              ##  ##  ##   ##  ##   ##  ####       ##\n" +
+                "   ##    ## ##       ##     #####   ##   ##  ##  ###     ##              ## ##   ##   ##  ##   ##   #####     ##\n" +
+                "   ##    ## ###      ##        ###  ##   ##  ##   ##     ##              ##  ##  ##   ##  ##   ##      ###    ##\n" +
+                "   ##    ##  ##      ##    ##   ##  ##   ##  ##   ##     ##              ##  ##  ##   ##  ##   ##  ##   ##    ##\n" +
+                "  ####   ##  ###    ####    ## ##    ## ##    ## ##     ####            ### ##    ## ##    ## ##    ## ##    ####\n" +
+                "--------------------------------------------------------------------------------------------------------------------------");
     }
 
     @Override

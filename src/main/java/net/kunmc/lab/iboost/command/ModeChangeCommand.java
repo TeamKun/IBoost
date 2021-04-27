@@ -52,7 +52,7 @@ public class ModeChangeCommand implements TabExecutor {
                     BoostManager.getInstance().setPressMode(false);
                     sender.sendMessage("Boost Pluginを連打モードにしました");
                 } else {
-                    sender.sendMessage("Boost Pluginはすでに連打しモードです");
+                    sender.sendMessage("Boost Pluginはすでに連打モードです");
                 }
             }
         }
@@ -64,7 +64,7 @@ public class ModeChangeCommand implements TabExecutor {
         if (command.getName().equals("boost")) {
             if (args.length == 1) {
                 return Arrays.asList("enable", "disable", "mode");
-            } else if (args.length == 2) {
+            } else if (args.length == 2 && args[0].equals("mode")) {
                 return Arrays.asList("press", "toggle");
             }
         }

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ModeChangeCommand implements TabExecutor {
@@ -19,7 +20,10 @@ public class ModeChangeCommand implements TabExecutor {
         if (!command.getName().equals("boost")) {
             return true;
         }
-        if (args[0].equals("enable")) {
+
+        if (args.length == 0) {
+            sender.sendMessage("/boost <enable/disable/mode> <mode場合,mash/press>");
+        } else if (args[0].equals("enable")) {
             if (!BoostManager.getInstance().isAtive()) {
                 BoostManager.getInstance().setAtive(true);
                 sender.sendMessage("Boost Pluginを有効にしました");
@@ -40,14 +44,16 @@ public class ModeChangeCommand implements TabExecutor {
                 sender.sendMessage("Boost Pluginはすでに無効です");
             }
         } else if (args[0].equals("mode")) {
-            if (args[1].equals("press")) {
+            if (args.length == 1) {
+                sender.sendMessage("/boost mode <mash/press>");
+            } else if (args[1].equals("press")) {
                 if (!BoostManager.getInstance().isPressMode()) {
                     BoostManager.getInstance().setPressMode(true);
                     sender.sendMessage("Boost Pluginを長押しモードにしました");
                 } else {
                     sender.sendMessage("Boost Pluginはすでに長押しモードです");
                 }
-            } else if (args[1].equals("toggle")) {
+            } else if (args[1].equals("mash")) {
                 if (BoostManager.getInstance().isPressMode()) {
                     BoostManager.getInstance().setPressMode(false);
                     sender.sendMessage("Boost Pluginを連打モードにしました");
@@ -59,15 +65,16 @@ public class ModeChangeCommand implements TabExecutor {
         return true;
     }
 
+    //https://github.com/TeamKun/FanFanFan/blob/master/src/main/java/net/kunmc/lab/FanPlugin.java#L66
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (command.getName().equals("boost")) {
             if (args.length == 1) {
                 return Arrays.asList("enable", "disable", "mode");
             } else if (args.length == 2 && args[0].equals("mode")) {
-                return Arrays.asList("press", "toggle");
+                return Arrays.asList("press", "mash");
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 }

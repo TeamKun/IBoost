@@ -34,7 +34,7 @@ public class BoostManager {
 
         float prePar = IkisugiUtil.clamp(parsent, 0f, 0.5f);
         float postPar = IkisugiUtil.clamp(parsent - 0.5f, 0f, 0.5f);
-        String str = IkisugiUtil.getPercentegeBar(prePar * 2f, 11) + (int) (parsent * 100) + "%" + IkisugiUtil.getPercentegeBar(postPar * 2.3f, 11);
+        String str = IkisugiUtil.getPercentageBar(prePar * 2f, 11) + (int) (parsent * 100) + "%" + IkisugiUtil.getPercentageBar(postPar * 2.3f, 11);
         TextComponent component = new TextComponent(str);
         if (STATES.containsKey(playerID))
             component.setColor(STATES.get(playerID).getColor());

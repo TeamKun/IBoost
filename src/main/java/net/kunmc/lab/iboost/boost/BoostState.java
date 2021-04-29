@@ -16,7 +16,7 @@ public class BoostState {
     private final float maxCharge = 100;
     private final float ikisugiCharge = 75;
     private final UUID playerID;
-    private float chaged;
+    private float charged;
     private int reduseCoolDown;
     private int waringColorCoolDown;
     private boolean waningColor;
@@ -27,18 +27,18 @@ public class BoostState {
     }
 
     public void setChaged(float chaged) {
-        this.chaged = chaged;
+        this.charged = chaged;
     }
 
     public void addChaged(float addChaged) {
         if (!ikisugiCoolDown) {
-            setChaged(Math.min(this.chaged + addChaged, maxCharge));
+            setChaged(Math.min(this.charged + addChaged, maxCharge));
             reduseCoolDown = 20;
         }
     }
 
     public float getChaged() {
-        return chaged;
+        return charged;
     }
 
     public float getMaxCharge() {
@@ -46,12 +46,12 @@ public class BoostState {
     }
 
     public boolean isIkisugible() {
-        return chaged >= ikisugiCharge;
+        return charged >= ikisugiCharge;
         //   return Math.max((maxCharge - ikisugiCharge) / (chaged - ikisugiCharge), 0);
     }
 
     public void reduseChaged(float reduseChaged) {
-        setChaged(Math.max(this.chaged - reduseChaged, 0));
+        setChaged(Math.max(this.charged - reduseChaged, 0));
     }
 
     public ChatColor getColor() {
@@ -67,7 +67,7 @@ public class BoostState {
                 return ChatColor.GOLD;
         }
 
-        if (chaged >= 50)
+        if (charged >= 50)
             return ChatColor.GOLD;
 
         return ChatColor.WHITE;
@@ -92,30 +92,42 @@ public class BoostState {
                 }
             }
 
-            if (chaged >= maxCharge && !ikisugiCoolDown) {
-                player.getWorld().createExplosion(player, 10f);
+            if (charged >= maxCharge && !ikisugiCoolDown) {
+                player.getWorld().createExplosion(player.getLocation(), 5);
+
+
                 ikisugiCoolDown = true;
                 reduseCoolDown = 0;
             }
         }
 
-        if (chaged <= 0) {
+        if (charged <= 0) {
             ikisugiCoolDown = false;
         }
 
-        if (!ikisugiCoolDown) {
-            player.setWalkSpeed(IkisugiUtil.clamp(chaged / 100f, 0.2f, 1f));
-            player.setFlySpeed(IkisugiUtil.clamp(chaged / 100f, 0.2f, 1f));
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(IkisugiUtil.clamp(chaged / 10f * 4, 4, 40));
+        if (!ikisugiCoolDown && (!BoostManager.getInstance().isPressMode() || !player.isSneaking())) {
+            player.setWalkSpeed(IkisugiUtil.clamp(charged / 100f, 0.07f, 1f));
+            player.setFlySpeed(IkisugiUtil.clamp(charged / 100f, 0.1f, 1f));
+            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(IkisugiUtil.clamp(charged / 10f * 4, 1, 40));
 
-            int hl = (int) IkisugiUtil.clamp(chaged / 100 * 120 - 1, -1, 120);
-            if (hl >= 0) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 10, hl, true, false));
+            //   int hl = (int) IkisugiUtil.clamp(charged / 100 * 120 - 1, -1, 120);
+            if (charged < 20) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 10, (int) ((20 - charged) / 10), true, false));
             }
+            if (charged >= 30) {
+                int xx = (int) Math.pow(1.06d, charged);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 10, Math.min(xx, 255), true, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10, Math.max((int) (10 * ((double) (charged - 30) / 70d)), 0), true, false));
+            }
+
         } else {
-            player.setWalkSpeed(0.2f);
+            player.setWalkSpeed(0.07f);
             player.setFlySpeed(0.1f);
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0);
+            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(1);
+
+            if (!BoostManager.getInstance().isPressMode() || !player.isSneaking())
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 5, 2, true, false));
+
         }
 
     }

@@ -69,6 +69,9 @@ public class BoostState {
         if (charged >= 50)
             return ChatColor.GOLD;
 
+        if (charged >= 25)
+            return ChatColor.YELLOW;
+
         return ChatColor.WHITE;
     }
 

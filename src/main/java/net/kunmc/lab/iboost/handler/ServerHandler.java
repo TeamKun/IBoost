@@ -48,8 +48,12 @@ public class ServerHandler implements Listener {
 
             Bukkit.getServer().getOnlinePlayers().forEach(n -> {
 
-                if (BoostManager.getInstance().isPressMode() && n.isSneaking())
+                if (BoostManager.getInstance().isPressMode() && n.isSneaking()) {
                     manager.boosted(n.getUniqueId(), 0.3f);
+                    n.setWalkSpeed(0.2f);
+                    n.setFlySpeed(0.1f);
+                    n.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0);
+                }
 
                 manager.tick(n.getUniqueId());
                 n.spigot().sendMessage(ChatMessageType.ACTION_BAR, manager.getActionBar(n.getUniqueId()));

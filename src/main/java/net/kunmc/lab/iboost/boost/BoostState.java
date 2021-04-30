@@ -17,9 +17,9 @@ public class BoostState {
     private final float ikisugiCharge = 75;
     private final UUID playerID;
     private float charged;
-    private int reduseCoolDown;
-    private int waringColorCoolDown;
-    private boolean waningColor;
+    private int reduceCoolDown;
+    private int warningColorCoolDown;
+    private boolean warningColor;
     private boolean ikisugiCoolDown;
 
     public BoostState(UUID playerID) {
@@ -33,7 +33,7 @@ public class BoostState {
     public void addChaged(float addChaged) {
         if (!ikisugiCoolDown) {
             setChaged(Math.min(this.charged + addChaged, maxCharge));
-            reduseCoolDown = 20;
+            reduceCoolDown = 20;
         }
     }
 
@@ -47,7 +47,6 @@ public class BoostState {
 
     public boolean isIkisugible() {
         return charged >= ikisugiCharge;
-        //   return Math.max((maxCharge - ikisugiCharge) / (chaged - ikisugiCharge), 0);
     }
 
     public void reduseChaged(float reduseChaged) {
@@ -61,7 +60,7 @@ public class BoostState {
         }
 
         if (isIkisugible()) {
-            if (waningColor)
+            if (warningColor)
                 return ChatColor.DARK_RED;
             else
                 return ChatColor.GOLD;
@@ -75,18 +74,18 @@ public class BoostState {
 
     public void tick() {
         Player player = Bukkit.getServer().getPlayer(playerID);
-        if (reduseCoolDown < 0) {
+        if (reduceCoolDown < 0) {
             reduseChaged(ikisugiCoolDown ? 0.5f : 0.1f);
         } else {
-            reduseCoolDown--;
+            reduceCoolDown--;
         }
 
         if (isIkisugible()) {
-            if (waringColorCoolDown < 3) {
-                waringColorCoolDown++;
+            if (warningColorCoolDown < 3) {
+                warningColorCoolDown++;
             } else {
-                waringColorCoolDown = 0;
-                waningColor = !waningColor;
+                warningColorCoolDown = 0;
+                warningColor = !warningColor;
                 if (!ikisugiCoolDown) {
                     Bukkit.getPlayer(playerID).playSound(Sound.sound(org.bukkit.Sound.BLOCK_NOTE_BLOCK_HARP, Sound.Source.PLAYER, 1, 1));
                 }
@@ -97,7 +96,7 @@ public class BoostState {
 
 
                 ikisugiCoolDown = true;
-                reduseCoolDown = 0;
+                reduceCoolDown = 0;
             }
         }
 
@@ -105,19 +104,24 @@ public class BoostState {
             ikisugiCoolDown = false;
         }
 
-        if (!ikisugiCoolDown && (!BoostManager.getInstance().isPressMode() || !player.isSneaking())) {
-            player.setWalkSpeed(IkisugiUtil.clamp(charged / 100f, 0.07f, 1f));
-            player.setFlySpeed(IkisugiUtil.clamp(charged / 100f, 0.1f, 1f));
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(IkisugiUtil.clamp(charged / 10f * 4, 1, 40));
+        if (!ikisugiCoolDown) {
 
-            //   int hl = (int) IkisugiUtil.clamp(charged / 100 * 120 - 1, -1, 120);
             if (charged < 20) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 10, (int) ((20 - charged) / 10), true, false));
             }
-            if (charged >= 30) {
-                int xx = (int) Math.pow(1.06d, charged);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 10, Math.min(xx, 255), true, false));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10, Math.max((int) (10 * ((double) (charged - 30) / 70d)), 0), true, false));
+
+            if(!BoostManager.getInstance().isPressMode() || !player.isSneaking()){
+                player.setWalkSpeed(IkisugiUtil.clamp(charged / 100f, 0.07f, 1f));
+                player.setFlySpeed(IkisugiUtil.clamp(charged / 100f, 0.1f, 1f));
+                player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(IkisugiUtil.clamp(charged / 10f * 4, 1, 40));
+
+                //   int hl = (int) IkisugiUtil.clamp(charged / 100 * 120 - 1, -1, 120);
+
+                if (charged >= 30) {
+                    int xx = (int) Math.pow(1.06d, charged);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 10, Math.min(xx, 255), true, false));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10, Math.max((int) (10 * ((double) (charged - 30) / 70d)), 0), true, false));
+                }
             }
 
         } else {

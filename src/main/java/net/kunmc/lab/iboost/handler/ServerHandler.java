@@ -3,6 +3,7 @@ package net.kunmc.lab.iboost.handler;
 import net.kunmc.lab.iboost.boost.BoostManager;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -20,7 +21,7 @@ public class ServerHandler implements Listener {
 
     @EventHandler
     public void onPlayerSneak(PlayerToggleSneakEvent e) {
-        if (BoostManager.getInstance().isAtive() && !BoostManager.getInstance().isPressMode() && e.isSneaking()) {
+        if (BoostManager.getInstance().isActive() && !BoostManager.getInstance().isPressMode() && e.isSneaking()) {
             BoostManager.getInstance().boosted(e.getPlayer().getUniqueId(), 1f);
         }
     }
@@ -28,15 +29,21 @@ public class ServerHandler implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         BoostManager.getInstance().clear(e.getEntity().getUniqueId());
+        e.getEntity().setWalkSpeed(0.2f);
+        e.getEntity().setFlySpeed(0.1f);
+        e.getEntity().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         BoostManager.getInstance().clear(e.getPlayer().getUniqueId());
+        e.getPlayer().setWalkSpeed(0.2f);
+        e.getPlayer().setFlySpeed(0.1f);
+        e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0);
     }
 
     public static void onTick() {
-        if (BoostManager.getInstance().isAtive()) {
+        if (BoostManager.getInstance().isActive()) {
             BoostManager manager = BoostManager.getInstance();
 
             Bukkit.getServer().getOnlinePlayers().forEach(n -> {

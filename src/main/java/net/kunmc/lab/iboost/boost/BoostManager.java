@@ -11,7 +11,7 @@ import java.util.UUID;
 public class BoostManager {
     private static final BoostManager INSTANCE = new BoostManager();
     private final Map<UUID, BoostState> STATES = new HashMap<>();
-    private boolean ative;
+    private boolean active;
     private boolean pressMode = false;
 
     public static BoostManager getInstance() {
@@ -58,12 +58,12 @@ public class BoostManager {
         STATES.clear();
     }
 
-    public void setAtive(boolean ative) {
-        this.ative = ative;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    public boolean isAtive() {
-        return ative;
+    public boolean isActive() {
+        return active;
     }
 
     public boolean isPressMode() {

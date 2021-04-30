@@ -15,6 +15,7 @@ public final class IBoost extends JavaPlugin {
     public void onEnable() {
         ServerHandler.init(getServer().getPluginManager(), this);
         IBCommands.init();
+        //This is very ikisugi code!
         getLogger().log(Level.INFO, "------------------------------------------------------------------------------------------------\n" +
                 "  ####   ##  ###    ####    ## ##   ##  ###   ## ##     ####            ### ##    ## ##    ## ##    ## ##   #### ##\n" +
                 "   ##    ##  ##      ##    ##   ##  ##   ##  ##   ##     ##              ##  ##  ##   ##  ##   ##  ##   ##  # ## ##\n" +

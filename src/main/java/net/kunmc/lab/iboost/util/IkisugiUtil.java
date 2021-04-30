@@ -6,7 +6,7 @@ public class IkisugiUtil {
     }
 
     public static String getPercentageBar(float par, int cont) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int parCont = (int) ((float) cont * par);
         for (int i = 0; i < cont; i++) {
             if (parCont > i)

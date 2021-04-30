@@ -24,15 +24,15 @@ public class ModeChangeCommand implements TabExecutor {
         if (args.length == 0) {
             sender.sendMessage("/boost <enable/disable/mode> <mode場合,mash/press>");
         } else if (args[0].equals("enable")) {
-            if (!BoostManager.getInstance().isAtive()) {
-                BoostManager.getInstance().setAtive(true);
+            if (!BoostManager.getInstance().isActive()) {
+                BoostManager.getInstance().setActive(true);
                 sender.sendMessage("Boost Pluginを有効にしました");
             } else {
                 sender.sendMessage("Boost Pluginはすでに有効です");
             }
         } else if (args[0].equals("disable")) {
-            if (BoostManager.getInstance().isAtive()) {
-                BoostManager.getInstance().setAtive(false);
+            if (BoostManager.getInstance().isActive()) {
+                BoostManager.getInstance().setActive(false);
                 sender.sendMessage("Boost Pluginを無効にしました");
                 BoostManager.getInstance().clear();
                 Bukkit.getOnlinePlayers().forEach(n -> {

@@ -73,4 +73,12 @@ public class BoostManager {
     public void setPressMode(boolean pressMode) {
         this.pressMode = pressMode;
     }
+
+    public BoostState getState(UUID plid) {
+
+        if (!STATES.containsKey(plid))
+            STATES.put(plid, new BoostState(plid));
+
+        return STATES.get(plid);
+    }
 }

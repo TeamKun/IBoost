@@ -1,16 +1,20 @@
 package net.kunmc.lab.iboost.handler;
 
 import net.kunmc.lab.iboost.boost.BoostManager;
+import net.kunmc.lab.iboost.boost.BoostState;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 public class ServerHandler implements Listener {
 
@@ -41,6 +45,41 @@ public class ServerHandler implements Listener {
         e.getPlayer().setFlySpeed(0.1f);
         e.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0);
     }
+
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+
+        BoostManager manager = BoostManager.getInstance();
+
+        if (!manager.isActive())
+            return;
+
+        BoostState state = manager.getState(e.getPlayer().getUniqueId());
+
+        if (e.getPlayer().isInWater()) {
+            Location f = e.getFrom();
+            Location t = e.getTo();
+            double speed = e.getFrom().distance(e.getTo());
+            //  Vector v = new Vector(t.getX() - f.getX(), t.getY() - f.getY(), t.getZ() - f.getZ());
+            Vector v = e.getPlayer().getLocation().getDirection().normalize();
+
+            if (state.getChaged() <= 20) {
+                v.multiply(0.5f * (state.getChaged() / 20f));
+                v.setY(e.getPlayer().getVelocity().getY());
+                e.getPlayer().setVelocity(v);
+            } else {
+                float par = (state.getChaged() - 20f) / 80f;
+                if (speed <= 1.3 + (0.3 * par)) {
+                    if (!e.getPlayer().isSwimming())
+                        v.setY(0);
+                    e.getPlayer().setVelocity(v.multiply(par + 1.5));
+                }
+            }
+
+        }
+    }
+
 
     public static void onTick() {
         if (BoostManager.getInstance().isActive()) {

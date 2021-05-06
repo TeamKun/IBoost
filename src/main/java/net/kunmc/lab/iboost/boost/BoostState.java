@@ -138,4 +138,8 @@ public class BoostState {
         }
 
     }
+
+    public boolean isIkisugiCoolDown() {
+        return ikisugiCoolDown;
+    }
 }

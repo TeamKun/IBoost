@@ -49,7 +49,6 @@ public class ServerHandler implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-
         BoostManager manager = BoostManager.getInstance();
 
         if (!manager.isActive())
@@ -58,26 +57,29 @@ public class ServerHandler implements Listener {
         BoostState state = manager.getState(e.getPlayer().getUniqueId());
 
         if (e.getPlayer().isInWater()) {
-            Location f = e.getFrom();
-            Location t = e.getTo();
-            double speed = e.getFrom().distance(e.getTo());
-            //  Vector v = new Vector(t.getX() - f.getX(), t.getY() - f.getY(), t.getZ() - f.getZ());
-            Vector v = e.getPlayer().getLocation().getDirection().normalize();
+            if (e.getPlayer().isSwimming()) {
+                float par = state.getChaged() / 20f;
 
-            if (state.getChaged() <= 20) {
-                v.multiply(0.5f * (state.getChaged() / 20f));
-                v.setY(e.getPlayer().getVelocity().getY());
-                e.getPlayer().setVelocity(v);
+                if (state.isIkisugiCoolDown())
+                    par = 0f;
+
+                Vector v = e.getPlayer().getLocation().getDirection().normalize();
+                e.getPlayer().setVelocity(v.multiply(0.2f * par));
             } else {
-                float par = (state.getChaged() - 20f) / 80f;
-                if (speed <= 1.3 + (0.3 * par)) {
-                    if (!e.getPlayer().isSwimming())
-                        v.setY(0);
-                    e.getPlayer().setVelocity(v.multiply(par + 1.5));
+                Location f = e.getFrom();
+                Location t = e.getTo();
+                Vector v = new Vector(t.getX() - f.getX(), 0, t.getZ() - f.getZ());
+                double speed = e.getFrom().distance(e.getTo());
+                if (speed > 0) {
+                    double dr = 0;
+
+
+                    System.out.println(dr);
                 }
             }
-
         }
+
+
     }
 
 

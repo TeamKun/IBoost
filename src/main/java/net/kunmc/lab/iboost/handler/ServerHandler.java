@@ -4,7 +4,6 @@ import net.kunmc.lab.iboost.boost.BoostManager;
 import net.kunmc.lab.iboost.boost.BoostState;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -60,23 +59,31 @@ public class ServerHandler implements Listener {
             if (e.getPlayer().isSwimming()) {
                 float par = state.getChaged() / 20f;
 
-                if (state.isIkisugiCoolDown())
-                    par = 0f;
+                if (!(!BoostManager.getInstance().isPressMode() || !e.getPlayer().isSneaking()) || state.isIkisugiCoolDown())
+                    par = 0;
+
 
                 Vector v = e.getPlayer().getLocation().getDirection().normalize();
                 e.getPlayer().setVelocity(v.multiply(0.2f * par));
-            } else {
+            }/* else {
                 Location f = e.getFrom();
                 Location t = e.getTo();
                 Vector v = new Vector(t.getX() - f.getX(), 0, t.getZ() - f.getZ());
                 double speed = e.getFrom().distance(e.getTo());
                 if (speed > 0) {
-                    double dr = 0;
+                    e.setCancelled(true);
+                    double dir = Math.atan(v.getZ() / v.getX());
 
+                    double addSpeed = 2;
 
-                    System.out.println(dr);
+                    double adX = addSpeed * Math.cos(dir);
+                    double adZ = addSpeed * Math.sin(dir);
+
+                    Vector v3 = new Vector(adX, e.getPlayer().getVelocity().getY(), adZ);
+
+                    e.getPlayer().setVelocity(v3);
                 }
-            }
+            }*/
         }
 
 
